@@ -1,0 +1,15 @@
+html, body, #app {
+  background-color: #121212 !important;
+  color: #FFFFFF !important;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+
+.v-application {
+  background-color: #121212 !important;
+}
+
+.v-card {
+  background-color: #1E1E1E !important;
+}
