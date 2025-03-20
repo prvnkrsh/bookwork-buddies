@@ -11,12 +11,13 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
+    meta: { requiresAuth: true }, // Add this to protect the Home route
   },
   {
     path: "/profile",
     name: "Profile",
     component: Profile,
-    meta: { requiresAuth: true }, // Requires user to be logged in
+    meta: { requiresAuth: true },
   },
   {
     path: "/login",
@@ -36,9 +37,9 @@ router.beforeEach((to, from, next) => {
   const user = auth.currentUser;
 
   if (requiresAuth && !user) {
-    next("/login");
+    next("/login"); // Redirect to login if user is not authenticated
   } else if (to.path === "/login" && user) {
-    next("/profile");
+    next("/profile"); // Redirect to profile if user is already logged in
   } else {
     next();
   }

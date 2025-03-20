@@ -3,8 +3,8 @@
     <v-card-title class="text-h5">Log Your Reading</v-card-title>
     <v-card-text>
       <v-form @submit.prevent="logReading">
-        <!-- Book Title Autocomplete -->
-        <v-autocomplete
+        <!-- Book Title Combobox -->
+        <v-combobox
           v-model="selectedBook"
           :items="books"
           item-title="title"
@@ -13,7 +13,9 @@
           variant="outlined"
           @update:modelValue="onBookSelect"
           clearable
-        ></v-autocomplete>
+          hide-no-data
+          :return-object="false"
+        ></v-combobox>
 
         <!-- Thumbnail Preview -->
         <v-img
@@ -77,8 +79,15 @@ export default {
   },
   methods: {
     onBookSelect(bookTitle) {
-      const book = this.books.find((b) => b.title === bookTitle);
-      this.selectedThumbnail = book ? book.thumbnail : null;
+      // If the user selects or types a book title
+      if (bookTitle) {
+        const book = this.books.find((b) => b.title === bookTitle);
+        this.selectedThumbnail = book
+          ? book.thumbnail
+          : "https://via.placeholder.com/40x60?text=Custom+Book"; // Default thumbnail for custom books
+      } else {
+        this.selectedThumbnail = null;
+      }
     },
     async logReading() {
       if (!this.$store.state.user) {
@@ -89,7 +98,7 @@ export default {
       try {
         const readingLog = {
           bookTitle: this.selectedBook,
-          thumbnail: this.selectedThumbnail, // Ensure thumbnail is saved
+          thumbnail: this.selectedThumbnail || "https://via.placeholder.com/40x60?text=Custom+Book",
           pages: this.pagesRead,
           bookFinished: this.bookFinished,
           timestamp: new Date().toISOString(),

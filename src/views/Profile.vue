@@ -117,28 +117,11 @@
         </v-card>
       </v-col>
     </v-row>
-
-    <!-- Logout Button -->
-    <v-row class="mt-6" v-if="!loading">
-      <v-col>
-        <transition name="fade">
-          <v-btn
-            :style="{ backgroundColor: '#FF5252', color: '#FFFFFF' }"
-            @click="logout"
-            class="glow-on-hover"
-          >
-            Logout
-          </v-btn>
-        </transition>
-      </v-col>
-    </v-row>
   </v-container>
 </template>
 
 <script>
-import { auth } from "../firebase";
-import { signOut } from "firebase/auth";
-import { db } from "../firebase";
+import { db } from "../firebase"; // Removed unused 'auth' import
 import { doc, getDoc, collection, getDocs, query, orderBy } from "firebase/firestore";
 import { Chart } from "vue-chartjs";
 import {
@@ -364,21 +347,12 @@ export default {
         };
       }
     },
-    async logout() {
-      try {
-        await signOut(auth);
-        this.$store.commit("setUser", null);
-        this.$router.push("/login");
-      } catch (error) {
-        console.error("Logout error:", error.message);
-      }
-    },
     handleImageError(index) {
       // Update the thumbnail for the specific log entry to a fallback image
-      this.$set(this.readingLogs, index, {
+      this.readingLogs[index] = {
         ...this.readingLogs[index],
         thumbnail: "/images/fallback-book.jpg", // Ensure this path exists in your public folder
-      });
+      };
     },
   },
 };
@@ -406,24 +380,18 @@ export default {
 }
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 1s ease; /* Increased duration for visibility */
+  transition: opacity 1s ease;
 }
 .fade-enter, .fade-leave-to {
   opacity: 0;
 }
 .list-enter-active,
 .list-leave-active {
-  transition: all 1s ease; /* Increased duration for visibility */
+  transition: all 1s ease;
 }
 .list-enter, .list-leave-to {
   opacity: 0;
   transform: translateY(20px);
-}
-.glow-on-hover {
-  transition: all 0.3s ease;
-}
-.glow-on-hover:hover {
-  box-shadow: 0 0 15px rgba(255, 82, 82, 0.6);
 }
 .book-image {
   transition: transform 0.3s ease;
